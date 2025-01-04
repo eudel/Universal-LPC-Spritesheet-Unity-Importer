@@ -98,7 +98,8 @@ public class LpcSpriteProcessor : AssetPostprocessor {
 		if (m_EnabledState) {
 			TextureImporter textureImporter = (TextureImporter) assetImporter;
 			textureImporter.GetSourceTextureWidthAndHeight (out int textureWidth, out int textureHeight);
-			Debug.Log (textureWidth + " - " + textureHeight);
+			// Debug.Log (textureWidth + " - " + textureHeight);
+
 			// Do nothing if it not a LPC Based Sprite
 			if ((textureWidth != LPC_SHEET_WIDTH || textureHeight != LPC_SHEET_HEIGHT) && (textureWidth != LPC_SHEET_WIDTH_EXTENDED || textureHeight != LPC_SHEET_HEIGHT_EXTENDED)) {
 				Debug.Log ("Preprocess: Do nothing");
@@ -131,7 +132,6 @@ public class LpcSpriteProcessor : AssetPostprocessor {
 			Debug.Log ("Importing LPC Character Sheet");
 			TextureImporter textureImporter = (TextureImporter) assetImporter;
 
-#if UNITY_2021_2_OR_NEWER
 			SpriteDataProviderFactories factory = new SpriteDataProviderFactories ();
 			factory.Init ();
 			ISpriteEditorDataProvider dataProvider = factory.GetSpriteEditorDataProviderFromObject (textureImporter);
@@ -155,13 +155,9 @@ public class LpcSpriteProcessor : AssetPostprocessor {
 			} catch (Exception e) {
 				Debug.LogError (e);
 			}
-#else
-			textureImporter.spritesheet = GetSpriteSheet ();
-#endif
 		}
 	}
 
-#if UNITY_2021_2_OR_NEWER
 	private SpriteRect[] GetSpriteSheet (SpriteRect[] previousSpriteRects) {
 		List<SpriteRect> rects = new List<SpriteRect> ();
 		int rows = 0;
@@ -255,90 +251,6 @@ public class LpcSpriteProcessor : AssetPostprocessor {
 
 		return rects.ToArray ();
 	}
-#else
-	private SpriteMetaData[] GetSpriteSheet () {
-		List<SpriteMetaData> metas = new List<SpriteMetaData> ();
-		for (int row = 0; row < m_RowCount; ++row) {
-			for (int col = 0; col < m_ColCount; ++col) {
-				SpriteMetaData meta = new SpriteMetaData ();
-				meta.rect = new Rect (col * LPC_SPRITE_SIZE, row * LPC_SPRITE_SIZE, LPC_SPRITE_SIZE, LPC_SPRITE_SIZE);
-
-				LpcAnimationState animState = GetAnimationState (row, col);
-
-				if (!m_ImportEmptySprites) {
-					if ((animState == LpcAnimationState.OneHandedHalfslash && col >= m_OhFrames))
-						break;
-					if ((animState == LpcAnimationState.Run && col >= m_RuFrames))
-						break;
-					if ((animState == LpcAnimationState.Emote && col >= m_S1Frames + m_S2Frames + m_S3Frames + m_EmFrames))
-						break;
-					if ((animState == LpcAnimationState.Jump && col >= m_JuFrames))
-						break;
-					if ((animState == LpcAnimationState.CombatIdle && col >= m_CiFrames + m_IdFrames))
-						break;
-					if ((animState == LpcAnimationState.Climb && col >= m_ClFrames))
-						break;
-					if ((animState == LpcAnimationState.Hurt && col >= m_HuFrames))
-						break;
-					if ((animState == LpcAnimationState.Shoot && col >= m_ShFrames))
-						break;
-					if ((animState == LpcAnimationState.Slash && col >= m_SlFrames))
-						break;
-					if ((animState == LpcAnimationState.Thrust && col >= m_ThFrames))
-						break;
-					if ((animState == LpcAnimationState.Walkcycle && col >= m_WcFrames))
-						break;
-					if ((animState == LpcAnimationState.Spellcast && col >= m_ScFrames))
-						break;
-				}
-
-				string[] path_branch = assetImporter.assetPath.Split ('/');
-				//Debug.Log("SPRITE PATH: " + assetImporter.assetPath);
-
-				string prefix = "";
-				for (int i = 6; i < path_branch.Length; i++) {
-					string node = path_branch[i];
-					string[] split_node = node.Split ('.');
-					//Debug.Log("PATH BRANCH: " + node);
-
-					prefix += string.Format ("{0}_", split_node[0]);
-				}
-				//Debug.Log("SPRITE PREFIX:" + prefix);
-
-				string namePrefix = ResolveLpcNamePrefix (row, col, prefix);
-
-				// Debug.Log ("SPRITE COLUMN: " + col);
-				if (animState == LpcAnimationState.OneHandedBackslash)
-					col -= m_OsFrames;
-				else if (animState == LpcAnimationState.CombatIdle)
-					col -= m_CiFrames;
-				else if (animState == LpcAnimationState.Sit2)
-					col -= m_S1Frames;
-				else if (animState == LpcAnimationState.Sit3)
-					col -= m_S1Frames + m_S2Frames;
-				else if (animState == LpcAnimationState.Emote)
-					col -= m_S1Frames + m_S2Frames + m_S3Frames;
-				// Debug.Log ("SPRITE NAME COLUMN: " + col);
-				meta.name = namePrefix + col;
-				if (animState == LpcAnimationState.OneHandedBackslash)
-					col += m_OsFrames;
-				else if (animState == LpcAnimationState.CombatIdle)
-					col += m_CiFrames;
-				else if (animState == LpcAnimationState.Sit2)
-					col += m_S1Frames;
-				else if (animState == LpcAnimationState.Sit3)
-					col += m_S1Frames + m_S2Frames;
-				else if (animState == LpcAnimationState.Emote)
-					col += m_S1Frames + m_S2Frames + m_S3Frames;
-
-				// Debug.Log ("SPRITE NAME: " + meta.name);
-				metas.Add (meta);
-			}
-		}
-
-		return metas.ToArray ();
-	}
-#endif
 
 	private static GUID[] INVALID_GUIDS = new GUID[] {
 		new GUID ("00000000000000000800000000000000")
