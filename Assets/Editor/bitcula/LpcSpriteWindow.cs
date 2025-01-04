@@ -1,7 +1,5 @@
-﻿using Unity.Plastic.Newtonsoft.Json.Linq;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class LpcSpriteWindow : EditorWindow {
 	private bool m_EnabledState;
