@@ -555,47 +555,47 @@ public class LpcSpriteProcessor : AssetPostprocessor {
 		} else {
 			switch (row) {
 				case (0):
-					return "hu_";
+					return prefix + "hu_";
 				case (1):
-					return "sh_r_";
+					return prefix + "sh_r_";
 				case (2):
-					return "sh_d_";
+					return prefix + "sh_d_";
 				case (3):
-					return "sh_l_";
+					return prefix + "sh_l_";
 				case (4):
-					return "sh_t_";
+					return prefix + "sh_t_";
 				case (5):
-					return "sl_r_";
+					return prefix + "sl_r_";
 				case (6):
-					return "sl_d_";
+					return prefix + "sl_d_";
 				case (7):
-					return "sl_l_";
+					return prefix + "sl_l_";
 				case (8):
-					return "sl_t_";
+					return prefix + "sl_t_";
 				case (9):
-					return "wc_r_";
+					return prefix + "wc_r_";
 				case (10):
-					return "wc_d_";
+					return prefix + "wc_d_";
 				case (11):
-					return "wc_l_";
+					return prefix + "wc_l_";
 				case (12):
-					return "wc_t_";
+					return prefix + "wc_t_";
 				case (13):
-					return "th_r_";
+					return prefix + "th_r_";
 				case (14):
-					return "th_d_";
+					return prefix + "th_d_";
 				case (15):
-					return "th_l_";
+					return prefix + "th_l_";
 				case (16):
-					return "th_t_";
+					return prefix + "th_t_";
 				case (17):
-					return "sc_r_";
+					return prefix + "sc_r_";
 				case (18):
-					return "sc_d_";
+					return prefix + "sc_d_";
 				case (19):
-					return "sc_l_";
+					return prefix + "sc_l_";
 				case (20):
-					return "sc_t_";
+					return prefix + "sc_t_";
 				default:
 					Debug.LogError ("ResolveLpcNamePrefix unknown row: " + row);
 					return "";
